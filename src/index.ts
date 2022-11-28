@@ -2,7 +2,7 @@ import http from 'http';
 import createDebug from 'debug';
 
 // import { CustomError } from './interfaces/error.js';
-import { dbConnect } from './db.connect.js';
+import { dbConnect } from './services/db.connect.js';
 import { app } from './app.js';
 
 const debug = createDebug('W8');
