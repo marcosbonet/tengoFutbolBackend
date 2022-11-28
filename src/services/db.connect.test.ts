@@ -9,7 +9,7 @@ describe('Given "dbConnect"', () => {
             const result = await dbConnect();
             expect(spiConnect).toHaveBeenCalled();
             expect(typeof result).toBe(typeof mongoose);
-            expect(result.connection.db.databaseName).toBe('CodersTesting');
+            expect(result.connection.db.databaseName).toBe('tengofulboTesting');
         });
     });
     describe('When the environment is not "test"', () => {
@@ -18,7 +18,7 @@ describe('Given "dbConnect"', () => {
             const result = await dbConnect();
             expect(spiConnect).toHaveBeenCalled();
             expect(typeof result).toBe(typeof mongoose);
-            expect(result.connection.db.databaseName).toBe('Coders2022');
+            expect(result.connection.db.databaseName).toBe('tengoFulbo');
         });
     });
     afterEach(() => {
