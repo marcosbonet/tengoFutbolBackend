@@ -51,7 +51,7 @@ jobs:
       - name: Testing coverage
         run: npm run test:prod #Change for a valid npm script
         env:
-          USER: ${{ secrets.USER }}
+          USERNAME: ${{ secrets.USERNAME }}
           PASSWD: ${{ secrets.PASSWD }}
           CLUSTER: ${{ secrets.CLUSTER }}
       - name: SonarCloud Scan
