@@ -56,6 +56,7 @@ describe('Given the Player respository', () => {
             );
         });
     });
+});
 //     describe('When we instanciate the find function , with a key', () => {
 //         test('it should return a player whit this key', async () => {
 //             const result = await repository.find(newPlayerMockArray[0]);
@@ -68,4 +69,4 @@ describe('Given the Player respository', () => {
 //             expect(result).toEqual({ id: testIds[0] });
 //         });
 //     });
-// });
+// })
