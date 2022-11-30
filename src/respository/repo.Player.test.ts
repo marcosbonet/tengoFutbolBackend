@@ -56,16 +56,16 @@ describe('Given the Player respository', () => {
             );
         });
     });
-    describe('When we instanciate the find function , with a key', () => {
-        test('it should return a player whit this key', async () => {
-            const result = await repository.find(newPlayerMockArray[0]);
-            expect(result.playerName).toEqual(mockData[0].playerName);
-        });
-    });
-    describe('when we instanicate the delete function, with a id', () => {
-        test('is choulr return the id of deleted player', async () => {
-            const result = await repository.delete(new TyPeof.ObjectId());
-            expect(result).toEqual({ id: testIds[0] });
-        });
-    });
-});
+//     describe('When we instanciate the find function , with a key', () => {
+//         test('it should return a player whit this key', async () => {
+//             const result = await repository.find(newPlayerMockArray[0]);
+//             expect(result.playerName).toEqual(mockData[0].playerName);
+//         });
+//     });
+//     describe('when we instanicate the delete function, with a id', () => {
+//         test('is choulr return the id of deleted player', async () => {
+//             const result = await repository.delete(new TyPeof.ObjectId());
+//             expect(result).toEqual({ id: testIds[0] });
+//         });
+//     });
+// });

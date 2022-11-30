@@ -33,4 +33,4 @@ playerSchema.set('toJSON', {
         delete returnedObject.__id;
     },
 });
-export const Match = model<PlayerTypes>('Matches', playerSchema, 'matches');
+export const Player = model<PlayerTypes>('Matches', playerSchema, 'matches');

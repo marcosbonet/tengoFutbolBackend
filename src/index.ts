@@ -30,4 +30,9 @@ server.on('listening', () => {
 //     response.write(error.message);
 //     response.end();
 // });
-dbConnect();
+dbConnect()
+    .then((mongoose) => {
+        debug('DB:', mongoose.connection.db.databaseName);
+        server.listen(port);
+    })
+    .catch((error) => server.emit(error));
