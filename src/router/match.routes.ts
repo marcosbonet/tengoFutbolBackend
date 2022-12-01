@@ -1,13 +1,23 @@
 import { Router } from 'express';
-//  import { MatchRepo } from "../respository/repo.Match";
-//  import { PlayerRepo } from "../respository/repo.Player";
+import { MatchController } from '../controller/match.controller.js';
+import { MatchRepo } from '../respository/repo.Match.js';
+import { PlayerRepo } from '../respository/repo.Player.js';
 
 export const matchesRouter = Router();
-//  const controller = MatchesController(MatchRepo.getInstance(), PlayerRepo.getInstance());
+const controller = new MatchController(
+    MatchRepo.getInstance(),
+    PlayerRepo.getInstance()
+);
 
-//  matchesRouter.get('/', controller.get.bind(controller));
-//  matchesRouter.find('/:id',controller.query.bind(controller))
-
-//  matchesRouter.post('/', logged, who, controller.create.bind(controller));
-//  matchesRouter.patch('/update/:id', logged, who, controller.update.bind(controller))
-//  matchesRouter.patch('/delete/:id', logged, who, controller.delete.bind(controller));
+matchesRouter.get('/', controller.get.bind(controller));
+matchesRouter.search(
+    '/place/:key/:value',
+    controller.queryPlace.bind(controller)
+);
+matchesRouter.search(
+    '/date/:key/:value',
+    controller.queryDate.bind(controller)
+);
+matchesRouter.post('/', controller.create.bind(controller));
+matchesRouter.patch('/update/:id', controller.update.bind(controller));
+matchesRouter.patch('/delete/:id', controller.updatedelete.bind(controller));

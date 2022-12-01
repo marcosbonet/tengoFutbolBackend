@@ -1,8 +1,7 @@
-import { resolveObjectURL } from 'buffer';
-import mongoose, { Types } from 'mongoose';
-import { Player, PlayerTypes } from '../entities/players';
+import mongoose from 'mongoose';
+import { Player, PlayerTypes } from '../entities/players.js';
+import { id } from '../inerfaces/repo.interfaces.js';
 
-export type id = Types.ObjectId;
 export class PlayerRepo {
     static instance: PlayerRepo;
     public static getInstance(): PlayerRepo {
@@ -18,7 +17,7 @@ export class PlayerRepo {
             player: 0,
         });
     }
-    async getoOne(id: id): Promise<PlayerTypes> {
+    async getOne(id: id): Promise<PlayerTypes> {
         const result = await Player.findById(id).populate('matches', {
             id: 0,
             image: 0,
@@ -50,14 +49,8 @@ export class PlayerRepo {
         return result as PlayerTypes;
     }
 
-    async create(data: PlayerTypes): Promise<PlayerTypes> {
-        const result = await (
-            await Player.create(data)
-        ).populate('matches', {
-            id: 0,
-            image: 0,
-            player: 0,
-        });
+    async create(data: Partial<PlayerTypes>): Promise<PlayerTypes> {
+        const result = await Player.create(data);
         return result as PlayerTypes;
     }
 

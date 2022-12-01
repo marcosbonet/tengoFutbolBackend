@@ -1,16 +1,12 @@
 import { NextFunction, Response, Request } from 'express';
-import { Error, ObjectId } from 'mongoose';
-import { MatchTypes } from '../entities/matches';
-import { PlayerTypes } from '../entities/players';
-import { HTTPError } from '../inerfaces/error';
-import { MatchRepoTypes, PlayerRepoTypes } from '../inerfaces/repo.interfaces';
-import { createToken, passwdValidate } from '../services/auth/auth';
+import { Error } from 'mongoose';
+import { HTTPError } from '../inerfaces/error.js';
+import { MatchRepo } from '../respository/repo.Match.js';
+import { PlayerRepo } from '../respository/repo.Player.js';
+import { createToken, passwdValidate } from '../services/auth/auth.js';
 
 export class PlayerController {
-    constructor(
-        public repository: PlayerRepoTypes<PlayerTypes>,
-        public matchRepo: MatchRepoTypes<MatchTypes>
-    ) {}
+    constructor(public repository: PlayerRepo, public matchRepo: MatchRepo) {}
 
     async register(req: Request, res: Response, next: NextFunction) {
         try {

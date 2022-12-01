@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bc from 'bcryptjs';
-import { SECRET } from '../../config';
-import { Types } from 'mongoose';
+import { SECRET } from '../../config.js';
 
 export const getSecret = (secret = SECRET) => {
     if (typeof secret !== 'string' || secret === '') {
@@ -11,7 +10,7 @@ export const getSecret = (secret = SECRET) => {
 };
 
 export type TokenPayload = {
-    id: Types.ObjectId;
+    id: string;
     playerName: string;
 };
 

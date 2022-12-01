@@ -2,19 +2,18 @@ export type id = string;
 
 export interface PlayerRepoTypes<T> {
     get: () => Promise<Array<T>>;
-    query: (data: any) => Promise<T>;
-    create: (data: Partial<T>) => Promise<T>;
-    delete: (id: id) => Promise<void>;
-    update: (id: id, data: Partial<T>) => Promise<T>;
     getOne: (id: id) => Promise<T>;
+    query: (data: { [key: string]: string }) => Promise<T>;
+    update: (id: id, data: Partial<T>) => Promise<T>;
+    create: (data: Partial<T>) => Promise<T>;
+    delete: (id: id) => Promise<id>;
 }
 
 export interface MatchRepoTypes<T> {
     get: () => Promise<Array<T>>;
-    patch: (id: id, data: Partial<T>) => Promise<T>;
-    create: (data: Partial<T>) => Promise<T>;
-    update: (id: id, data: Partial<T>) => Promise<T>;
     getOne: (id: id) => Promise<T>;
-    delete: (id: id) => Promise<void>;
-    query: (data: any) => Promise<T>;
+    update: (id: id, data: Partial<T>) => Promise<T>;
+    query: (data: { [key: string]: string }) => Promise<T>;
+    create: (data: Partial<T>) => Promise<T>;
+    delete: (id: id) => Promise<id>;
 }

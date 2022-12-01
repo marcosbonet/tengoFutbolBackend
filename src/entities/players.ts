@@ -5,22 +5,22 @@ export type ProtoPlayer = {
     level?: number;
     email?: string;
     password?: string;
+    matches?: string;
 };
 
 export type PlayerTypes = {
-    id: Types.ObjectId;
+    id: string;
     playerName: string;
     level: number;
     email: string;
     password: string;
-    matches?: Array<Types.ObjectId>;
+    matches: Array<string>;
 };
 
 export const playerSchema = new Schema<PlayerTypes>({
     playerName: {
         type: String,
         required: true,
-        unique: true,
     },
     level: { type: Number, min: 0, max: 10 },
     email: String,
@@ -28,7 +28,7 @@ export const playerSchema = new Schema<PlayerTypes>({
     matches: [
         {
             type: Types.ObjectId,
-            ref: 'matches',
+            ref: 'Matches',
         },
     ],
 });
@@ -40,4 +40,4 @@ playerSchema.set('toJSON', {
         delete returnedObject.__id;
     },
 });
-export const Player = model<PlayerTypes>('Matches', playerSchema, 'matches');
+export const Player = model<PlayerTypes>('Player', playerSchema, 'players');

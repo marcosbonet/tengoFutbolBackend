@@ -2,34 +2,27 @@ import { model, Schema, Types } from 'mongoose';
 
 export type ProtoMatch = {
     places?: string;
-    date?: Date;
+    date?: string;
     image?: string;
-    players?: Types.ObjectId;
+    players?: Array<string>;
 };
 
 export type MatchTypes = {
-    id: Types.ObjectId;
+    id: string;
     places: string;
-    date: Date;
+    date: string;
     image: string;
-    players: Array<Types.ObjectId>;
+    players: Array<string>;
 };
 
 export const matchSchema = new Schema<MatchTypes>({
-    id: Types.ObjectId,
-    places: {
-        type: String,
-        required: true,
-    },
-    date: {
-        type: Date,
-        required: true,
-    },
+    places: String,
+    date: String,
     image: String,
 
     players: [
         {
-            type: Schema.Types.ObjectId,
+            type: Types.ObjectId,
             ref: 'Player',
         },
     ],

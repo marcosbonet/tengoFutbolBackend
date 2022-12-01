@@ -1,18 +1,15 @@
 import { NextFunction, Response, Request } from 'express';
 import { Error } from 'mongoose';
-import { MatchTypes } from '../entities/matches';
-import { PlayerTypes } from '../entities/players';
 import createDebug from 'debug';
-import { HTTPError } from '../inerfaces/error';
-import { MatchRepoTypes, PlayerRepoTypes } from '../inerfaces/repo.interfaces';
-import { ExtraRequest } from '../middlewares/interceptor';
+import { HTTPError } from '../inerfaces/error.js';
+
+import { ExtraRequest } from '../middlewares/interceptor.js';
+import { PlayerRepo } from '../respository/repo.Player.js';
+import { MatchRepo } from '../respository/repo.Match.js';
 
 const debug = createDebug('PF:controller:matchcontroller');
 export class MatchController {
-    constructor(
-        public matchRepo: MatchRepoTypes<MatchTypes>,
-        public playerRepo: PlayerRepoTypes<PlayerTypes>
-    ) {}
+    constructor(public matchRepo: MatchRepo, public playerRepo: PlayerRepo) {}
 
     async get(req: Request, res: Response, next: NextFunction) {
         try {
@@ -27,53 +24,63 @@ export class MatchController {
             next(httpError);
         }
     }
-    //     async query(req: Request, res: Response, next: NextFunction)
-    // {
-    //     try{debug('query');
-    // const match= await this.matchRepo.query(data)
-    //     res.status(201).json({match})
+    async queryPlace(req: Request, res: Response, next: NextFunction) {
+        try {
+            debug('query');
 
-    // }
-    //   catch (error) {
-    //             const httpError = new HTTPError(
-    //                 503,
-    //                 'Service unavailable',
-    //                 (error as Error).message
-    //             );
-    //             next(httpError);
-    //         }}
+            const match = await this.matchRepo.query({ place: req.body.place });
+            res.status(201).json({ match });
+        } catch (error) {
+            const httpError = new HTTPError(
+                503,
+                'Service unavailable',
+                (error as Error).message
+            );
+            next(httpError);
+        }
+    }
+    async queryDate(req: Request, res: Response, next: NextFunction) {
+        try {
+            debug('query');
 
-    // async post(req: ExtraRequest, res: Response, next: NextFunction) {
-    //     try {
-    //         debug('post');
-    //         if (!req.payload) {
-    //             throw new Error(' Invalid Payload');
-    //         }
-    //         const player = await this.playerRepo.getOne(req.payload.id);
-    //         const match = await this.matchRepo.getOne(req.payload.id);
-    //         req.body.players = player.id;
-    //         req.body.matches = match.id;
-    //         const match = await this.matchRepo.create(req.body);
-    //         const player = await this.playerRepo.create(req.body);
-    //         player.matches.push(match.id);
-    //         this.playerRepo.update(player.id.toString(), {
-    //             matches: player.matches,
-    //         });
-    //         match.players.push(player.id);
-    //         this.matchRepo.update(match.id.toString(), {
-    //             players: match.players,
-    //         });
+            const match = await this.matchRepo.query({ date: req.body.date });
+            res.status(201).json({ match });
+        } catch (error) {
+            const httpError = new HTTPError(
+                503,
+                'Service unavailable',
+                (error as Error).message
+            );
+            next(httpError);
+        }
+    }
 
-    //         res.status(201).json({ match });
-    //     } catch (error) {
-    //         const httpError = new HTTPError(
-    //             503,
-    //             'Service unavailable',
-    //             (error as Error).message
-    //         );
-    //         next(httpError);
-    //     }
-    // }
+    async create(req: ExtraRequest, res: Response, next: NextFunction) {
+        try {
+            debug('post');
+            if (!req.payload) {
+                throw new Error(' Invalid Payload');
+            }
+
+            const playerA = await this.playerRepo.getOne(req.payload.id);
+
+            const match = await this.matchRepo.getOne(req.payload.id);
+            req.body.players = playerA.id;
+            req.body.matches = match.id;
+
+            const matchA = await this.matchRepo.create(req.body);
+            const player = await this.playerRepo.create(req.body);
+            playerA.matches.push(matchA.id);
+            match.players.push(player.id);
+        } catch (error) {
+            const httpError = new HTTPError(
+                503,
+                'Service unavailable',
+                (error as Error).message
+            );
+            next(httpError);
+        }
+    }
     async update(req: Request, res: Response, next: NextFunction) {
         try {
             const match = await this.matchRepo.update(req.params.id, req.body);
@@ -108,9 +115,3 @@ export class MatchController {
         return httpError;
     }
 }
-
-//  [GETALL]/matches→ Devuelve un array con todos partidos.(home)
-//  [SEARCH]/matches/get/:IDmatch→ Devuelve un partido particular, filtrado por fecha y lugar
-//  [POST]/matches/create→ Recibe un objeto matches sin id para crearlo en la BD y devuelve el mismo objeto con id creada.
-//  [PATCH]/matches/addplayer/:IDmatch → Recibe un partido , realiza las modificaciones generando un nuevo jugador en la BD con la misma id y la propiedad del matches destino, con un nuevo jugador
-//  [PATCH]/matches/deleteplayer/:IDmatch → Recibe un partido , realiza las modificaciones generando  menus jugador en la BD con la misma id y la propiedad del matches destino, con un nuevo jugador
