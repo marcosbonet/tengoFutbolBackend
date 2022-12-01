@@ -12,7 +12,7 @@ export type MatchTypes = {
     places: string;
     date: Date;
     image: string;
-    players: Types.ObjectId;
+    players: Array<Types.ObjectId>;
 };
 
 export const matchSchema = new Schema<MatchTypes>({
@@ -27,10 +27,12 @@ export const matchSchema = new Schema<MatchTypes>({
     },
     image: String,
 
-    players: {
-        type: Schema.Types.ObjectId,
-        ref: 'Player',
-    },
+    players: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Player',
+        },
+    ],
 });
 
 matchSchema.set('toJSON', {

@@ -22,6 +22,7 @@ describe('Given the Player respository', () => {
             email: 'jajaja',
             level: 1,
             password: '1234',
+            matches: [],
         },
         {
             id: new Types.ObjectId(),
@@ -29,6 +30,7 @@ describe('Given the Player respository', () => {
             email: 'lololo',
             level: 1,
             password: '1234',
+            matches: [],
         },
     ];
 
@@ -41,7 +43,7 @@ describe('Given the Player respository', () => {
     });
     describe('When we instanciate post()', () => {
         test('it should return a new player', async () => {
-            const result = await repository.post(newPlayerMock);
+            const result = await repository.create(newPlayerMock);
             expect(result.playerName).toBe(newPlayerMock.playerName);
         });
         // test('this must return the player that  we create ', ()=>{ expect (async ()=>{  await repository.post(newPlayer);}).rejects.toThrow();
@@ -56,17 +58,19 @@ describe('Given the Player respository', () => {
             );
         });
     });
+    describe('When we instanciate the query function , with a key', () => {
+        test('it should return a player whit this key', async () => {
+            await repository.query({ playerName: 'alvaro' });
+            expect(newPlayerMockArray[0].playerName).toBe('alvaro');
+        });
+    });
+    describe('when we instanicate the delete function, with a id', () => {
+        test('is choulr return the id of deleted player', async () => {
+            const result = await repository.delete(newPlayerMockArray[0].id);
+            expect(result).toBe(newPlayerMockArray[0].id);
+        });
+    });
+    afterAll(async () => {
+        await repository.disconnect();
+    });
 });
-//     describe('When we instanciate the find function , with a key', () => {
-//         test('it should return a player whit this key', async () => {
-//             const result = await repository.find(newPlayerMockArray[0]);
-//             expect(result.playerName).toEqual(mockData[0].playerName);
-//         });
-//     });
-//     describe('when we instanicate the delete function, with a id', () => {
-//         test('is choulr return the id of deleted player', async () => {
-//             const result = await repository.delete(new TyPeof.ObjectId());
-//             expect(result).toEqual({ id: testIds[0] });
-//         });
-//     });
-// })

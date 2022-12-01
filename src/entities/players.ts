@@ -13,6 +13,7 @@ export type PlayerTypes = {
     level: number;
     email: string;
     password: string;
+    matches?: Array<Types.ObjectId>;
 };
 
 export const playerSchema = new Schema<PlayerTypes>({
@@ -24,6 +25,12 @@ export const playerSchema = new Schema<PlayerTypes>({
     level: { type: Number, min: 0, max: 10 },
     email: String,
     password: String,
+    matches: [
+        {
+            type: Types.ObjectId,
+            ref: 'matches',
+        },
+    ],
 });
 
 playerSchema.set('toJSON', {
