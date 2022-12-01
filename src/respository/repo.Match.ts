@@ -1,8 +1,8 @@
-import mongoose, { Types } from 'mongoose';
-import { Match, MatchTypes } from '../entities/matches';
-import { Player } from '../entities/players';
+import mongoose from 'mongoose';
+import { Match, MatchTypes, ProtoMatch } from '../entities/matches.js';
+import { Player } from '../entities/players.js';
 
-export type id = Types.ObjectId;
+export type id = string;
 export class MatchRepo {
     static instance: MatchRepo;
     public static getInstance(): MatchRepo {
@@ -11,17 +11,15 @@ export class MatchRepo {
         }
         return MatchRepo.instance;
     }
+    #Match = Match;
     async get(): Promise<Array<MatchTypes>> {
-        return Match.find().populate('players', {
-            email: 0,
-            password: 0,
-        });
+        const matches = this.#Match.find();
+        return matches;
     }
-    async getoOne(id: id): Promise<MatchTypes> {
+    async getOne(id: id): Promise<MatchTypes> {
         const result = await Match.findById(id).populate('matches', {
             id: 0,
             image: 0,
-            player: 0,
         });
         return result as MatchTypes;
     }
@@ -35,7 +33,7 @@ export class MatchRepo {
             email: 0,
             password: 0,
         });
-        if (!result) throw new Error('Not found id');
+
         return result as MatchTypes;
     }
     async query(search: { [key: string]: string }): Promise<MatchTypes> {
@@ -46,8 +44,7 @@ export class MatchRepo {
 
         return result as unknown as MatchTypes;
     }
-    async create(data: MatchTypes): Promise<MatchTypes> {
-        if (typeof data.places !== 'string') throw new Error(' is not a field');
+    async create(data: ProtoMatch): Promise<MatchTypes> {
         const result = await (
             await Match.create(data)
         ).populate('players', {
