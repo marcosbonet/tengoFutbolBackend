@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bc from 'bcryptjs';
-import { SECRET } from '../../config';
+import { SECRET } from '../../config.js';
 
 export const getSecret = (secret = SECRET) => {
     if (typeof secret !== 'string' || secret === '') {
@@ -11,8 +11,7 @@ export const getSecret = (secret = SECRET) => {
 
 export type TokenPayload = {
     id: string;
-    name: string;
-    role: string;
+    playerName: string;
 };
 
 export const createToken = (payload: TokenPayload) => {
@@ -20,7 +19,7 @@ export const createToken = (payload: TokenPayload) => {
 };
 export const readToken = (token: string) => {
     const payload = jwt.verify(token, getSecret());
-    if (typeof payload === 'string') throw new Error('Token not valid');
+
     return payload as jwt.JwtPayload;
 };
 

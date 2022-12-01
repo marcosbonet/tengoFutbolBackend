@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomError } from '../inerfaces/error';
+import { CustomError } from '../inerfaces/error.js';
 import createDebug from 'debug';
 const debug = createDebug('FP:middlewares:error');
 export const errorManager = (

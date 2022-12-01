@@ -1,4 +1,4 @@
-import { CustomError, HTTPError } from './error';
+import { CustomError, HTTPError } from './error.js';
 
 describe('Given', () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
