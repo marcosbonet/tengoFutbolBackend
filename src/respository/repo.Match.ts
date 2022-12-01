@@ -1,5 +1,6 @@
 import mongoose, { Types } from 'mongoose';
 import { Match, MatchTypes } from '../entities/matches';
+import { Player } from '../entities/players';
 
 export type id = Types.ObjectId;
 export class MatchRepo {
@@ -16,7 +17,18 @@ export class MatchRepo {
             password: 0,
         });
     }
-    async patch(id: id, updateMatch: Partial<MatchTypes>): Promise<MatchTypes> {
+    async getoOne(id: id): Promise<MatchTypes> {
+        const result = await Match.findById(id).populate('matches', {
+            id: 0,
+            image: 0,
+            player: 0,
+        });
+        return result as MatchTypes;
+    }
+    async update(
+        id: id,
+        updateMatch: Partial<MatchTypes>
+    ): Promise<MatchTypes> {
         const result = await Match.findByIdAndUpdate(id, updateMatch, {
             new: true,
         }).populate('players', {
@@ -26,10 +38,27 @@ export class MatchRepo {
         if (!result) throw new Error('Not found id');
         return result as MatchTypes;
     }
-    async post(data: MatchTypes): Promise<MatchTypes> {
+    async query(search: { [key: string]: string }): Promise<MatchTypes> {
+        const result = await Match.find(search).populate('players', {
+            email: 0,
+            password: 0,
+        });
+
+        return result as unknown as MatchTypes;
+    }
+    async create(data: MatchTypes): Promise<MatchTypes> {
         if (typeof data.places !== 'string') throw new Error(' is not a field');
-        const result = await Match.create(data);
+        const result = await (
+            await Match.create(data)
+        ).populate('players', {
+            email: 0,
+            password: 0,
+        });
         return result as MatchTypes;
+    }
+    async delete(id: id): Promise<id> {
+        await Player.findByIdAndDelete(id);
+        return id;
     }
     disconnect() {
         mongoose.disconnect();
