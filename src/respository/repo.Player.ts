@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Player, PlayerTypes } from '../entities/players.js';
 import { id } from '../inerfaces/repo.interfaces.js';
+import { passwdEncrypt } from '../services/auth/auth.js';
 
 export class PlayerRepo {
     static instance: PlayerRepo;
@@ -10,6 +11,7 @@ export class PlayerRepo {
         }
         return PlayerRepo.instance;
     }
+    #Model = Player;
     async get(): Promise<Array<PlayerTypes>> {
         return Player.find().populate('matches', {
             id: 0,
@@ -25,13 +27,8 @@ export class PlayerRepo {
         });
         return result as PlayerTypes;
     }
-    async query(search: { [key: string]: string }): Promise<PlayerTypes> {
-        const result = await Player.find(search).populate('matches', {
-            id: 0,
-            image: 0,
-            player: 0,
-        });
-
+    async query(key: string, value: string): Promise<PlayerTypes> {
+        const result = await this.#Model.findOne({ [key]: value });
         return result as unknown as PlayerTypes;
     }
     async update(
@@ -50,6 +47,7 @@ export class PlayerRepo {
     }
 
     async create(data: Partial<PlayerTypes>): Promise<PlayerTypes> {
+        data.password = await passwdEncrypt(data.password as string);
         const result = await Player.create(data);
         return result as PlayerTypes;
     }

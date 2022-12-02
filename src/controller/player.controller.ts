@@ -1,12 +1,16 @@
+import createDebug from 'debug';
 import { NextFunction, Response, Request } from 'express';
 import { Error } from 'mongoose';
 import { HTTPError } from '../inerfaces/error.js';
 import { MatchRepo } from '../respository/repo.Match.js';
 import { PlayerRepo } from '../respository/repo.Player.js';
 import { createToken, passwdValidate } from '../services/auth/auth.js';
+const debug = createDebug('FP:player:controller');
 
 export class PlayerController {
-    constructor(public repository: PlayerRepo, public matchRepo: MatchRepo) {}
+    constructor(public repository: PlayerRepo, public matchRepo: MatchRepo) {
+        debug('controller');
+    }
 
     async register(req: Request, res: Response, next: NextFunction) {
         try {
@@ -23,23 +27,26 @@ export class PlayerController {
     }
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const player = await this.repository.query({
-                playerName: req.body.playerName,
-            });
-            player.id.toString;
+            debug('login');
+            const player = await this.repository.query(
+                'playerName',
+                req.body.playerName
+            );
+
             const isPasswdValid = await passwdValidate(
                 req.body.password,
                 player.password
             );
+
             if (!isPasswdValid) throw new Error('password invalid');
             const token = createToken({
-                id: player.id,
+                id: player.id.toString(),
                 playerName: player.playerName,
             });
-
+            console.log(token);
             res.json({ token });
         } catch (error) {
-            next(this.createHttpError(error as Error));
+            next(error);
         }
     }
     async delete(req: Request, res: Response, next: NextFunction) {
