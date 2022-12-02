@@ -89,8 +89,7 @@ describe('Given the Player respository', () => {
     describe('when we instanicate the delete function, with a id', () => {
         test('it should return the id of deleted player', async () => {
             const result = await repository.delete(newPlayerMockArray[0].id);
-            console.log('RESULT');
-            console.log(result);
+
             expect(result).toBe(newPlayerMockArray[0].id);
         });
     });
