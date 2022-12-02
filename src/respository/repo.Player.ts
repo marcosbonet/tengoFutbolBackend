@@ -42,7 +42,7 @@ export class PlayerRepo {
             image: 0,
             player: 0,
         });
-        if (!result) throw new Error('Not found id');
+
         return result as PlayerTypes;
     }
 

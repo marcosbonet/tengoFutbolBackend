@@ -37,7 +37,7 @@ export class MatchRepo {
         return result as MatchTypes;
     }
     async query(search: { [key: string]: string }): Promise<MatchTypes> {
-        const result = await Match.find(search).populate('players', {
+        const result = Match.find(search).populate('players', {
             email: 0,
             password: 0,
         });
@@ -54,20 +54,10 @@ export class MatchRepo {
         return result as MatchTypes;
     }
     async delete(id: id): Promise<id> {
-        await Player.findByIdAndDelete(id);
+        Player.findByIdAndDelete(id);
         return id;
     }
     disconnect() {
         mongoose.disconnect();
     }
 }
-
-// async findOne(search:{[key: string]: string | Date}): Promise<MatchTypes>{
-// //     const result = await Match.findOne(search).populate('players',{
-//             email: 0,
-//             password: 0
-//         });;
-// //     if(!result) throw new Error('Not found id');
-//     return result as unknown as MatchTypes
-// }
-// }
