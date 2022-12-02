@@ -22,7 +22,6 @@ const mock = { id: 'string', playerName: 'pedro' };
 describe('Given "createToken, when is is called', () => {
     test('then', () => {
         const spyfunction = jest.spyOn(jwt, 'sign');
-
         const result = createToken(mock);
         expect(typeof result).toBe('string');
         expect(spyfunction).toHaveBeenCalledWith(mock, SECRET);
