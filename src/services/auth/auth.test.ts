@@ -7,6 +7,7 @@ import {
     readToken,
 } from './auth';
 import bc from 'bcryptjs';
+import { SECRET } from '../../config.js';
 
 describe('GIven "getsecret', () => {
     describe('when is not a string', () => {
@@ -24,7 +25,7 @@ describe('Given "createToken, when is is called', () => {
 
         const result = createToken(mock);
         expect(typeof result).toBe('string');
-        expect(spyfunction).toHaveBeenCalled();
+        expect(spyfunction).toHaveBeenCalledWith(mock, SECRET);
     });
 });
 describe('Given "readToken" ', () => {
