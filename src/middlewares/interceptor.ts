@@ -13,7 +13,7 @@ export const autori = (
     next: NextFunction
 ) => {
     const authString = req.get('Authorization');
-    console.log(authString, 'authentifocation');
+
     if (!authString || !authString?.startsWith('Bearer')) {
         next(new HTTPError(403, 'Forbidden', 'password or user are wrong'));
         return;

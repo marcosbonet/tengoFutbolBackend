@@ -43,7 +43,7 @@ export class PlayerController {
                 id: player.id.toString(),
                 playerName: player.playerName,
             });
-            console.log(token);
+
             res.json({ token });
         } catch (error) {
             next(error);
