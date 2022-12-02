@@ -7,7 +7,6 @@ import {
     readToken,
 } from './auth';
 import bc from 'bcryptjs';
-import { Types } from 'mongoose';
 
 describe('GIven "getsecret', () => {
     describe('when is not a string', () => {
@@ -18,7 +17,7 @@ describe('GIven "getsecret', () => {
         });
     });
 });
-const mock = { id: new string(), playerName: 'pedro' };
+const mock = { id: 'string', playerName: 'pedro' };
 describe('Given "createToken, when is is called', () => {
     test('then', () => {
         const spyfunction = jest.spyOn(jwt, 'sign');

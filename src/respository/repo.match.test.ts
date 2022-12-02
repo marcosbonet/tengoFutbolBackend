@@ -1,16 +1,14 @@
-import mongoose from 'mongoose';
 import { Match } from '../entities/matches.js';
 
 import { dbConnect } from '../services/db.connect/db.connect.js';
 import { MatchRepo } from './repo.Match.js';
-import { PlayerRepo } from './repo.Player.js';
 
 describe('Given the Match respository', () => {
     const mockData = [
         {
             places: 'Le Stade',
             date: '',
-            image: 'muu bonito',
+            image: 'muy bonito',
         },
     ];
 
@@ -36,7 +34,7 @@ describe('Given the Match respository', () => {
         test('it should return the array whit Match', async () => {
             const spyModel = jest.spyOn(Match, 'find');
             const result = await repository.get();
-            console.log(result);
+
             expect(spyModel).toHaveBeenCalled();
             expect(result[0].places).toBe(mockData[0].places);
         });
@@ -44,7 +42,7 @@ describe('Given the Match respository', () => {
     describe('When we instanciate post()', () => {
         test('it should return a new Match', async () => {
             const mockNewMock = {
-                places: 'Martino staduum',
+                places: 'Martinooo staduum',
                 date: '',
                 image: 'malo',
             };
@@ -92,7 +90,7 @@ describe('Given the Match respository', () => {
             const updateMatchMock = {
                 places: 'General Martinez',
                 date: '2022-09-09',
-                image: 'muu bonito',
+                image: 'bonito',
                 players: [],
             };
             const result = await repository.update(testIds[0], updateMatchMock);
