@@ -7,6 +7,7 @@ import {
     readToken,
 } from './auth';
 import bc from 'bcryptjs';
+import { SECRET } from '../../config.js';
 
 describe('GIven "getsecret', () => {
     describe('when is not a string', () => {
@@ -21,10 +22,9 @@ const mock = { id: 'string', playerName: 'pedro' };
 describe('Given "createToken, when is is called', () => {
     test('then', () => {
         const spyfunction = jest.spyOn(jwt, 'sign');
-
         const result = createToken(mock);
         expect(typeof result).toBe('string');
-        expect(spyfunction).toHaveBeenCalled();
+        expect(spyfunction).toHaveBeenCalledWith(mock, SECRET);
     });
 });
 describe('Given "readToken" ', () => {

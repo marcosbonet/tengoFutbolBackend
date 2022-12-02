@@ -7,7 +7,7 @@ import { ExtraRequest } from '../middlewares/interceptor.js';
 import { PlayerRepo } from '../respository/repo.Player.js';
 import { MatchRepo } from '../respository/repo.Match.js';
 
-const debug = createDebug('PF:controller:matchcontroller');
+const debug = createDebug('PF:controller:match.controller');
 export class MatchController {
     constructor(public matchRepo: MatchRepo, public playerRepo: PlayerRepo) {}
 
@@ -64,14 +64,17 @@ export class MatchController {
 
             const playerA = await this.playerRepo.getOne(req.payload.id);
 
-            const match = await this.matchRepo.getOne(req.payload.id);
             req.body.players = playerA.id;
-            req.body.matches = match.id;
 
             const matchA = await this.matchRepo.create(req.body);
-            const player = await this.playerRepo.create(req.body);
+
             playerA.matches.push(matchA.id);
-            match.players.push(player.id);
+
+            this.playerRepo.update(playerA.id.toString(), {
+                matches: playerA.matches,
+            });
+            res.status(201);
+            res.json(matchA);
         } catch (error) {
             const httpError = new HTTPError(
                 503,

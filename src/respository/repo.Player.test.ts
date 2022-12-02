@@ -82,7 +82,7 @@ describe('Given the Player respository', () => {
 
     describe('When we instanciate the query function , with a key', () => {
         test('it should return a player whit this key', async () => {
-            await repository.query({ playerName: 'alvaro' });
+            await repository.query('playerName', 'alvaro');
             expect(newPlayerMockArray[0].playerName).toBe('alvaro');
         });
     });

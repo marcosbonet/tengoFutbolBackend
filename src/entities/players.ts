@@ -38,6 +38,7 @@ playerSchema.set('toJSON', {
         returnedObject.id = returnedObject._id;
         delete returnedObject.__v;
         delete returnedObject.__id;
+        delete returnedObject.password;
     },
 });
 export const Player = model<PlayerTypes>('Player', playerSchema, 'players');

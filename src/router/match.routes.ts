@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { MatchController } from '../controller/match.controller.js';
+import { autori } from '../middlewares/interceptor.js';
 import { MatchRepo } from '../respository/repo.Match.js';
 import { PlayerRepo } from '../respository/repo.Player.js';
 
@@ -18,6 +19,15 @@ matchesRouter.search(
     '/date/:key/:value',
     controller.queryDate.bind(controller)
 );
-matchesRouter.post('/', controller.create.bind(controller));
-matchesRouter.patch('/update/:id', controller.update.bind(controller));
-matchesRouter.patch('/delete/:id', controller.updatedelete.bind(controller));
+matchesRouter.post('/', autori, controller.create.bind(controller));
+matchesRouter.patch(
+    '/update/:id',
+    autori,
+
+    controller.update.bind(controller)
+);
+matchesRouter.patch(
+    '/delete/:id',
+    autori,
+    controller.updatedelete.bind(controller)
+);
