@@ -26,7 +26,6 @@ describe('Given the Match respository', () => {
     };
 
     const repository = MatchRepo.getInstance();
-
     beforeAll(async () => {
         await setUp();
     });
