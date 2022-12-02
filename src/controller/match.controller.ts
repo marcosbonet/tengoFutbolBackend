@@ -112,7 +112,7 @@ export class MatchController {
         }
         const httpError = new HTTPError(
             503,
-            'Service unavailable',
+            'Service Unavailable',
             error.message
         );
         return httpError;
