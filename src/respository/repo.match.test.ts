@@ -6,7 +6,7 @@ import { MatchRepo } from './repo.Match.js';
 describe('Given the Match respository', () => {
     const mockData = [
         {
-            places: 'Le Stade',
+            places: 'General Martinez',
             date: '',
             image: 'muy bonito',
         },
@@ -15,9 +15,9 @@ describe('Given the Match respository', () => {
     let testIds: Array<string>;
     const setUp = async () => {
         await dbConnect();
-        await Match.deleteMany();
-        await Match.insertMany(mockData);
-        await Match.find();
+        Match.deleteMany();
+        Match.insertMany(mockData);
+        Match.find();
         const data = await Match.find();
 
         testIds = [data[0].id];
@@ -99,6 +99,6 @@ describe('Given the Match respository', () => {
     });
 
     afterAll(async () => {
-        await repository.disconnect();
+        repository.disconnect();
     });
 });

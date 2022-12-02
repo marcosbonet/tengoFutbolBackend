@@ -1,9 +1,9 @@
 import http from 'http';
 import createDebug from 'debug';
 
-// import { CustomError } from './interfaces/error.js';
 import { dbConnect } from './services/db.connect/db.connect.js';
 import { app } from './app.js';
+import { CustomError } from './inerfaces/error.js';
 
 const debug = createDebug('FP:index');
 
@@ -21,15 +21,15 @@ server.on('listening', () => {
                 ? `http://localhost:${addr?.port}`
                 : `port ${addr?.port}`;
     }
-    console.log(`Listening on ${bind}`);
+    debug(`Listening on ${bind}`);
 });
 
-// server.on('error', (error: CustomError, response: http.ServerResponse) => {
-//     response.statusCode = error?.statusCode;
-//     response.statusMessage = error?.statusMessage;
-//     response.write(error.message);
-//     response.end();
-// });
+server.on('error', (error: CustomError, response: http.ServerResponse) => {
+    response.statusCode = error?.statusCode;
+    response.statusMessage = error?.statusMessage;
+    response.write(error.message);
+    response.end();
+});
 dbConnect()
     .then((mongoose) => {
         debug('DB:', mongoose.connection.db.databaseName);

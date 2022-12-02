@@ -102,7 +102,7 @@ export class MatchController {
     }
 
     #createHttpError(error: Error) {
-        if ((error as Error).message === 'Not found id') {
+        if (error.message === 'Not found id') {
             const httpError = new HTTPError(
                 404,
                 'Not Found',
@@ -113,7 +113,7 @@ export class MatchController {
         const httpError = new HTTPError(
             503,
             'Service unavailable',
-            (error as Error).message
+            error.message
         );
         return httpError;
     }

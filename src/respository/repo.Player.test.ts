@@ -34,9 +34,9 @@ describe('Given the Player respository', () => {
     let testIds: Array<string>;
     const setUp = async () => {
         await dbConnect();
-        await Player.deleteMany();
-        await Player.insertMany(mockData);
-        await Player.find();
+        Player.deleteMany();
+        Player.insertMany(mockData);
+        Player.find();
         const data = await Player.find();
         testIds = [(data[0].id, data[1].id)];
         return testIds;
@@ -111,6 +111,6 @@ describe('Given the Player respository', () => {
     });
 
     afterAll(async () => {
-        await repository.disconnect();
+        repository.disconnect();
     });
 });

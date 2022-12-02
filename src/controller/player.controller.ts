@@ -65,12 +65,8 @@ export class PlayerController {
     }
 
     createHttpError(error: Error) {
-        if ((error as Error).message === 'Not found id') {
-            const httpError = new HTTPError(
-                404,
-                'Not Found',
-                (error as Error).message
-            );
+        if (error.message === 'Not found id') {
+            const httpError = new HTTPError(404, 'Not Found', error.message);
             return httpError;
         }
     }
