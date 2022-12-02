@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 import { Player } from '../entities/players.js';
 import { dbConnect } from '../services/db.connect/db.connect.js';
 import { MatchRepo } from './repo.Match.js';
@@ -17,7 +15,7 @@ describe('Given the Player respository', () => {
     };
     const newPlayerMockArray = [
         {
-            id: new string(),
+            id: '6388a756ea85b251c768e200',
             playerName: 'alvaro',
             email: 'jajaja',
             level: 1,
@@ -25,7 +23,7 @@ describe('Given the Player respository', () => {
             matches: [],
         },
         {
-            id: new string(),
+            id: '123456',
             playerName: 'Luis',
             email: 'lololo',
             level: 1,
@@ -90,9 +88,9 @@ describe('Given the Player respository', () => {
     });
     describe('when we instanicate the delete function, with a id', () => {
         test('it should return the id of deleted player', async () => {
-            const result = await repository.delete(
-                newPlayerMockArray[0].id as unknown as string
-            );
+            const result = await repository.delete(newPlayerMockArray[0].id);
+            console.log('RESULT');
+            console.log(result);
             expect(result).toBe(newPlayerMockArray[0].id);
         });
     });

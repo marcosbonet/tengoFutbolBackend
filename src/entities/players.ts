@@ -28,7 +28,7 @@ export const playerSchema = new Schema<PlayerTypes>({
     matches: [
         {
             type: Types.ObjectId,
-            ref: 'Matches',
+            ref: 'matches',
         },
     ],
 });

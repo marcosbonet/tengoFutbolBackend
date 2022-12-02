@@ -17,7 +17,7 @@ export class MatchRepo {
         return matches;
     }
     async getOne(id: id): Promise<MatchTypes> {
-        const result = await Match.findById(id).populate('matches', {
+        const result = await Match.findById(id).populate('players', {
             id: 0,
             image: 0,
         });

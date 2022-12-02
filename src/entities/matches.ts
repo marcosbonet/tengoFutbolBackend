@@ -35,4 +35,4 @@ matchSchema.set('toJSON', {
         delete returnedObject.__id;
     },
 });
-export const Match = model<MatchTypes>('Matches', matchSchema, 'matches');
+export const Match = model<MatchTypes>('matches', matchSchema, 'matches');
