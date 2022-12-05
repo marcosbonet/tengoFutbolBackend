@@ -29,7 +29,9 @@ export class MatchController {
             debug('query');
 
             const match = await this.matchRepo.query({ place: req.body.value });
-            res.status(201).json({ match });
+
+            res.status(201);
+            res.json({ match });
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -43,30 +45,23 @@ export class MatchController {
     async create(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
             debug('post');
+
             if (!req.payload) {
                 throw new Error(' Invalid Payload');
             }
 
             const playerA = await this.playerRepo.getOne(req.payload.id);
 
-            req.body.players = playerA.id;
-
             const matchA = await this.matchRepo.create(req.body);
 
             matchA.players.push(playerA.id);
-            console.log(matchA.id);
 
-            playerA.matches.push(matchA.id);
             this.matchRepo.update(matchA.id.toString(), {
                 players: matchA.players,
             });
 
-            this.playerRepo.update(playerA.id.toString(), {
-                matches: playerA.matches,
-            });
-            const matchResult = await this.matchRepo.getOne(matchA.id);
             res.status(201);
-            res.json(matchResult);
+            res.json({ playerA });
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -78,22 +73,28 @@ export class MatchController {
     }
     async updateAdd(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
-            const match = await this.matchRepo.getOne(req.params.id);
             if (!req.payload) {
                 throw new Error('the playeris already in this match');
             }
+            const match = await this.matchRepo.getOne(req.params.id);
+
             const player = await this.playerRepo.getOne(req.payload.id);
-            if (!match.players.includes(player.id)) {
+            if (match.players.includes(player.id))
                 match.players.push(player.id);
-            }
             const updateMatch = await this.matchRepo.update(
                 match.id.toString(),
                 { players: match.players }
             );
 
-            res.status(200), res.json(updateMatch);
+            res.status(200);
+            res.json(updateMatch);
         } catch (error) {
-            next(this.#createHttpError(error as Error));
+            const httpError = new HTTPError(
+                404,
+                'Not Found',
+                (error as Error).message
+            );
+            next(httpError);
         }
     }
     async updatedelete(req: ExtraRequest, res: Response, next: NextFunction) {
@@ -104,33 +105,24 @@ export class MatchController {
             const player = await this.playerRepo.getOne(req.payload.id);
             debug(player);
             const filterDelete = match.players.filter(
-                (Player) => Player.toString() !== player.id.toString()
+                (ply) => ply.toString() !== player.id.toString()
             );
+
             const updateDelete = await this.matchRepo.update(
-                player.id.toString(),
-                { players: filterDelete }
+                match.id.toString(),
+                {
+                    players: filterDelete,
+                }
             );
 
             res.json(updateDelete);
         } catch (error) {
-            next(this.#createHttpError(error as Error));
-        }
-    }
-
-    #createHttpError(error: Error) {
-        if (error.message === 'Not found id') {
             const httpError = new HTTPError(
                 404,
                 'Not Found',
                 (error as Error).message
             );
-            return httpError;
+            next(httpError);
         }
-        const httpError = new HTTPError(
-            503,
-            'Service Unavailable',
-            error.message
-        );
-        return httpError;
     }
 }

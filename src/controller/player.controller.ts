@@ -1,6 +1,7 @@
 import createDebug from 'debug';
 import { NextFunction, Response, Request } from 'express';
 import { Error } from 'mongoose';
+import { userInfo } from 'os';
 import { HTTPError } from '../inerfaces/error.js';
 import { MatchRepo } from '../respository/repo.Match.js';
 import { PlayerRepo } from '../respository/repo.Player.js';
@@ -15,7 +16,10 @@ export class PlayerController {
     async register(req: Request, res: Response, next: NextFunction) {
         try {
             const player = await this.repository.create(req.body);
-            res.status(201).json({ player });
+
+            res.status(201);
+
+            res.json({ player });
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -32,6 +36,7 @@ export class PlayerController {
                 'playerName',
                 req.body.playerName
             );
+            if (userInfo.length === 0) throw new Error('User not found');
 
             const isPasswdValid = await passwdValidate(
                 req.body.password,
@@ -43,6 +48,7 @@ export class PlayerController {
                 id: player.id.toString(),
                 playerName: player.playerName,
             });
+            res.status(202);
 
             res.json({ token });
         } catch (error) {
@@ -51,8 +57,10 @@ export class PlayerController {
     }
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
+            console.log(req.params.id, 'params iddd');
             await this.repository.delete(req.params.id);
-            res.json({ id: req.params.id });
+
+            res.json({ id: req.body.id });
         } catch (error) {
             (error as Error).message === 'Not found id';
             const httpError = new HTTPError(
@@ -61,13 +69,6 @@ export class PlayerController {
                 (error as Error).message
             );
             next(httpError);
-        }
-    }
-
-    createHttpError(error: Error) {
-        if (error.message === 'Not found id') {
-            const httpError = new HTTPError(404, 'Not Found', error.message);
-            return httpError;
         }
     }
 }

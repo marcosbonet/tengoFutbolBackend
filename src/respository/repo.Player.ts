@@ -48,7 +48,9 @@ export class PlayerRepo {
 
     async create(data: Partial<PlayerTypes>): Promise<PlayerTypes> {
         data.password = await passwdEncrypt(data.password as string);
+
         const result = await Player.create(data);
+
         return result as PlayerTypes;
     }
 
