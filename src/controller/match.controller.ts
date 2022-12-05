@@ -24,26 +24,11 @@ export class MatchController {
             next(httpError);
         }
     }
-    async queryPlace(req: Request, res: Response, next: NextFunction) {
+    async query(req: Request, res: Response, next: NextFunction) {
         try {
             debug('query');
 
-            const match = await this.matchRepo.query({ place: req.body.place });
-            res.status(201).json({ match });
-        } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
-        }
-    }
-    async queryDate(req: Request, res: Response, next: NextFunction) {
-        try {
-            debug('query');
-
-            const match = await this.matchRepo.query({ date: req.body.date });
+            const match = await this.matchRepo.query({ place: req.body.value });
             res.status(201).json({ match });
         } catch (error) {
             const httpError = new HTTPError(
@@ -68,13 +53,20 @@ export class MatchController {
 
             const matchA = await this.matchRepo.create(req.body);
 
+            matchA.players.push(playerA.id);
+            console.log(matchA.id);
+
             playerA.matches.push(matchA.id);
+            this.matchRepo.update(matchA.id.toString(), {
+                players: matchA.players,
+            });
 
             this.playerRepo.update(playerA.id.toString(), {
                 matches: playerA.matches,
             });
+            const matchResult = await this.matchRepo.getOne(matchA.id);
             res.status(201);
-            res.json(matchA);
+            res.json(matchResult);
         } catch (error) {
             const httpError = new HTTPError(
                 503,
@@ -84,18 +76,42 @@ export class MatchController {
             next(httpError);
         }
     }
-    async update(req: Request, res: Response, next: NextFunction) {
+    async updateAdd(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
-            const match = await this.matchRepo.update(req.params.id, req.body);
-            res.json({ match });
+            const match = await this.matchRepo.getOne(req.params.id);
+            if (!req.payload) {
+                throw new Error('the playeris already in this match');
+            }
+            const player = await this.playerRepo.getOne(req.payload.id);
+            if (!match.players.includes(player.id)) {
+                match.players.push(player.id);
+            }
+            const updateMatch = await this.matchRepo.update(
+                match.id.toString(),
+                { players: match.players }
+            );
+
+            res.status(200), res.json(updateMatch);
         } catch (error) {
             next(this.#createHttpError(error as Error));
         }
     }
-    async updatedelete(req: Request, res: Response, next: NextFunction) {
+    async updatedelete(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
-            const match = await this.matchRepo.delete(req.params.id);
-            res.json({ match });
+            if (!req.payload) throw new Error('Wrong payload');
+            const match = await this.matchRepo.getOne(req.params.id);
+            debug(match);
+            const player = await this.playerRepo.getOne(req.payload.id);
+            debug(player);
+            const filterDelete = match.players.filter(
+                (Player) => Player.toString() !== player.id.toString()
+            );
+            const updateDelete = await this.matchRepo.update(
+                player.id.toString(),
+                { players: filterDelete }
+            );
+
+            res.json(updateDelete);
         } catch (error) {
             next(this.#createHttpError(error as Error));
         }
@@ -112,7 +128,7 @@ export class MatchController {
         }
         const httpError = new HTTPError(
             503,
-            'Service unavailable',
+            'Service Unavailable',
             error.message
         );
         return httpError;
