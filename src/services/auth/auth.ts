@@ -26,6 +26,7 @@ export const readToken = (token: string) => {
 export const passwdEncrypt = (passwd: string) => {
     return bc.hash(passwd, 10);
 };
+
 export const passwdValidate = (newPasswd: string, hash: string) => {
     return bc.compare(newPasswd, hash);
 };

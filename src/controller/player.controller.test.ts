@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { NextFunction, Request, Response } from 'express';
 import mongoose, { Types } from 'mongoose';
 import { ProtoPlayer } from '../entities/players.js';
@@ -36,7 +35,8 @@ describe('Given playerController', () => {
         let req: Partial<ExtraRequest>;
         let res: Partial<Response>;
         let next: NextFunction;
-        let testIds: Array<string>;
+
+        let error: CustomError;
         beforeEach(() => {
             req = {};
             res = {};
@@ -95,6 +95,20 @@ describe('Given playerController', () => {
             );
             expect(res.status).toHaveBeenCalledWith(202);
             expect(res.json).toHaveBeenCalledWith({ token: 'token' });
+        });
+        test(' then id the player is logged and the password is invalid', async () => {
+            error = new HTTPError(404, 'not found', 'password invalid');
+            RepoPlayer.getOne = jest.fn().mockRejectedValue(null);
+            (passwdValidate as jest.Mock).mockResolvedValue(false);
+            (createToken as jest.Mock).mockReturnValue('token');
+            req.body = { playerName: '', password: 'potato' };
+            await PlayerController1.login(
+                req as Request,
+                res as Response,
+                next
+            );
+
+            expect(error).toBeInstanceOf(HTTPError);
         });
         test('then if the user  is nos ok, it throws an error', async () => {
             (RepoPlayer.create as jest.Mock).mockRejectedValue([]);
@@ -177,6 +191,25 @@ describe('Given playerController', () => {
                 id: '637d1d346346f6ff04b55896',
                 name: 'pepe',
             });
+            await PlayerController1.login(
+                req as Request,
+                resp as Response,
+                next
+            );
+            expect(error).toBeInstanceOf(HTTPError);
+        });
+        test('Then login should have not been called', async () => {
+            RepoPlayer.query = jest.fn().mockRejectedValue(false);
+            await PlayerController1.login(
+                req as Request,
+                resp as Response,
+                next
+            );
+            expect(error).toBeInstanceOf(HTTPError);
+        });
+        test('Then login should have not been called', async () => {
+            (passwdValidate as jest.Mock) = jest.fn().mockResolvedValue(false);
+
             await PlayerController1.login(
                 req as Request,
                 resp as Response,

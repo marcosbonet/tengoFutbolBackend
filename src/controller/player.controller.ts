@@ -2,6 +2,7 @@ import createDebug from 'debug';
 import { NextFunction, Response, Request } from 'express';
 import { Error } from 'mongoose';
 import { userInfo } from 'os';
+
 import { HTTPError } from '../inerfaces/error.js';
 import { MatchRepo } from '../respository/repo.Match.js';
 import { PlayerRepo } from '../respository/repo.Player.js';
@@ -36,14 +37,14 @@ export class PlayerController {
                 'playerName',
                 req.body.playerName
             );
-            if (userInfo.length === 0) throw new Error('User not found');
 
             const isPasswdValid = await passwdValidate(
                 req.body.password,
                 player.password
             );
-
-            if (!isPasswdValid) throw new Error('password invalid');
+            if (!isPasswdValid) {
+                throw new Error('password invalid');
+            }
             const token = createToken({
                 id: player.id.toString(),
                 playerName: player.playerName,

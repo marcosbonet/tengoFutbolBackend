@@ -16,12 +16,7 @@ export class MatchController {
             const match = await this.matchRepo.get();
             res.json({ match });
         } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
+            next(this.#createHttpError(error as Error));
         }
     }
     async query(req: Request, res: Response, next: NextFunction) {
@@ -33,12 +28,7 @@ export class MatchController {
             res.status(201);
             res.json({ match });
         } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
+            next(this.#createHttpError(error as Error));
         }
     }
 
@@ -63,12 +53,7 @@ export class MatchController {
             res.status(201);
             res.json({ playerA });
         } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
+            next(this.#createHttpError(error as Error));
         }
     }
     async updateAdd(req: ExtraRequest, res: Response, next: NextFunction) {
@@ -79,8 +64,11 @@ export class MatchController {
             const match = await this.matchRepo.getOne(req.params.id);
 
             const player = await this.playerRepo.getOne(req.payload.id);
-            if (match.players.includes(player.id))
-                match.players.push(player.id);
+            if (match.players.includes(player.id)) {
+                throw new Error('this player is already in this match');
+            }
+
+            match.players.push(player.id);
             const updateMatch = await this.matchRepo.update(
                 match.id.toString(),
                 { players: match.players }
@@ -89,11 +77,7 @@ export class MatchController {
             res.status(200);
             res.json(updateMatch);
         } catch (error) {
-            const httpError = new HTTPError(
-                404,
-                'Not Found',
-                (error as Error).message
-            );
+            const httpError = new HTTPError(404, 'Not Found', 'Not found id');
             next(httpError);
         }
     }
@@ -117,12 +101,17 @@ export class MatchController {
 
             res.json(updateDelete);
         } catch (error) {
-            const httpError = new HTTPError(
-                404,
-                'Not Found',
-                (error as Error).message
-            );
+            const httpError = new HTTPError(404, 'Not Found', 'Not found id');
             next(httpError);
         }
+    }
+
+    #createHttpError(error: Error) {
+        const httpError = new HTTPError(
+            503,
+            'Service Unavailable',
+            error.message
+        );
+        return httpError;
     }
 }

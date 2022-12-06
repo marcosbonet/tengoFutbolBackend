@@ -13,10 +13,10 @@ describe('Given an "app" with "/matches" route', () => {
             await mongoose.disconnect();
         });
 
-        // test('Then the get to url/should sent status 200', async () => {
-        //     const response = await request(app).get('/');
-        //     expect(response.status).toBe(200);
-        // });
+        test('Then the get to url/should sent status 200', async () => {
+            const response = await request(app).get('/');
+            expect(response.status).toBe(200);
+        });
 
         test('Then the get to url /matches/:id with invalid id should sent status 404', async () => {
             const response = await request(app).get(
@@ -24,9 +24,9 @@ describe('Given an "app" with "/matches" route', () => {
             );
             expect(response.status).toBe(404);
         });
-        // test('Then the get to url /:key/:value with  params should sent status 200', async () => {
-        //     const response = await request(app).get('/matches/places/camp_nou');
-        //     expect(response.status).toBe(200);
-        // });
+        test('Then the get to url /:key/:value with  params should sent status 200', async () => {
+            const response = await request(app).get('/matches/places/camp_nou');
+            expect(response.status).toBe(200);
+        });
     });
 });

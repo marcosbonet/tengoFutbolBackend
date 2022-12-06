@@ -88,8 +88,8 @@ describe('given the controller match', () => {
         test(' if the body haave not a value..', async () => {
             const error = new HTTPError(
                 503,
-                'Serrvice Unavailable',
-                ' very bad'
+                'Service Unavailable',
+                'Not found id'
             );
             repoMatch.query = jest.fn().mockRejectedValue({});
             await controllerMatch.query(req as Request, res as Response, next);
@@ -152,10 +152,31 @@ describe('given the controller match', () => {
             expect(res.status).toHaveBeenCalled();
             expect(res.json).toHaveBeenCalled();
         });
+
+        test('if the playeris already on the list, addFav should throw an error', async () => {
+            req = {
+                params: { id: '123456789012345678901239' },
+                payload: { id: '123456789012345678901238' },
+            };
+
+            const mockData2 = { players: '123456789012345678901238' };
+
+            repoMatch.getOne = jest.fn().mockResolvedValueOnce(mockData2);
+            repoPlayer.getOne = jest
+                .fn()
+                .mockResolvedValue({ id: '123456789012345678901238' });
+
+            await controllerMatch.updateAdd(
+                req as ExtraRequest,
+                res as Response,
+                next
+            );
+            expect(next).toHaveBeenCalled();
+        });
         test('when UPDATEADD is should resturn a token', async () => {
             req.params = { id: '0' };
             repoPlayer.getOne = jest.fn().mockReturnValue({ id: '3' });
-            error = new HTTPError(503, 'Serrvice Unavailable', ' very bad');
+            error = new HTTPError(404, 'Not found', (error as Error).message);
 
             await controllerMatch.updateAdd(
                 req as Request,
@@ -167,7 +188,7 @@ describe('given the controller match', () => {
         });
         test('when UPDATEADD is should resturn a token', async () => {
             repoPlayer.getOne = jest.fn().mockRejectedValue({});
-            error = new HTTPError(503, 'Serrvice Unavailable', ' very bad');
+            error = new HTTPError(404, 'Not found', 'Not found id');
             await controllerMatch.updateAdd(
                 req as Request,
                 res as Response,
@@ -176,6 +197,7 @@ describe('given the controller match', () => {
 
             expect(error).toBeInstanceOf(Error);
         });
+
         test('when UPDATEDELETTE is should resturn a token', async () => {
             req.params = { id: '1' };
             repoPlayer.getOne = jest.fn().mockReturnValue({ id: '3' });
@@ -190,7 +212,7 @@ describe('given the controller match', () => {
         });
         test('when UPDATEDELETTE is should resturn a token', async () => {
             repoPlayer.getOne = jest.fn().mockRejectedValue({});
-            error = new HTTPError(503, 'Serrvice Unavailable', ' very bad');
+            error = new HTTPError(404, 'Not found', 'Not found id');
             await controllerMatch.updatedelete(
                 req as Request,
                 res as Response,
@@ -216,7 +238,7 @@ describe('given the controller match', () => {
         repository.get = jest.fn().mockRejectedValue(['product']);
         const next: NextFunction = jest.fn();
 
-        test('Then getAll should return an error', async () => {
+        test('Then GET should return an error', async () => {
             repository.get = jest.fn().mockRejectedValue('');
             error = new HTTPError(
                 503,
@@ -227,13 +249,14 @@ describe('given the controller match', () => {
             expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);
         });
-        test('Then get should return an error', async () => {
+        test('Then GET should return an error', async () => {
             const error = new Error('Not found id');
+
             await productController.get(req as Request, resp as Response, next);
             expect(error).toBeInstanceOf(Error);
         });
 
-        test('Then post should return an error', async () => {
+        test('Then CREATE should return an error', async () => {
             await productController.create(
                 req as Request,
                 resp as Response,
@@ -243,7 +266,7 @@ describe('given the controller match', () => {
             expect(error).toBeInstanceOf(HTTPError);
         });
 
-        test('Then patch should return an error', async () => {
+        test('Then UPDATE should return an error', async () => {
             await productController.updateAdd(
                 req as Request,
                 resp as Response,
@@ -253,7 +276,7 @@ describe('given the controller match', () => {
             expect(error).toBeInstanceOf(HTTPError);
         });
 
-        test('Then delete should return an error', async () => {
+        test('Then DELETE should return an error', async () => {
             const error = new Error('Not found id');
             await productController.updatedelete(
                 req as Request,
