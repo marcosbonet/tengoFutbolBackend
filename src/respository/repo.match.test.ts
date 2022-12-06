@@ -6,7 +6,7 @@ import { MatchRepo } from './repo.Match.js';
 describe('Given the Match respository', () => {
     const mockData = [
         {
-            places: 'General Martinez',
+            places: 'Quilmes',
             date: '',
             image: 'muy bonito',
         },

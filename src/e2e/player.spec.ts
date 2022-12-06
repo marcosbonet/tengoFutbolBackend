@@ -9,7 +9,7 @@ import { createToken, TokenPayload } from '../services/auth/auth';
 describe('Given an "app" with "/players" route', () => {
     const mockPlayer = [
         {
-            playerName: 'RobertoCarlo',
+            playerName: 'Robiño',
             password: '76543',
         },
         {
@@ -42,14 +42,14 @@ describe('Given an "app" with "/players" route', () => {
     describe('When I have connection to mongoDB', () => {
         test('Then the post to url /players/register with params should sent status 201', async () => {
             const response = await request(app).post('/players/register').send({
-                playerName: 'RobertoCarlo',
+                playerName: 'Robiño',
                 password: '76543',
             });
             expect(response.status).toBe(201);
         });
         test('Then the get to url /players/login with params should sent status 200', async () => {
             const newplayer = {
-                playerName: 'RobertoCarlo',
+                playerName: 'Robiño',
                 password: '76543',
             };
             const response = await request(app)

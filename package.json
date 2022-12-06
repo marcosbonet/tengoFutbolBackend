@@ -1,5 +1,5 @@
 {
-    "name": "Marcos_Bonet_Back-Final-Project-202210-MAD",
+    "name": "marcos_bonet",
     "version": "1.0.0",
     "description": "API server with express & user validation",
     "main": "index.js",
@@ -9,8 +9,8 @@
         "start:dev": "cross-env DEBUG=FP* PORT=7700 nodemon dist/index.js",
         "build": "tsc",
         "build:dev": "tsc --watch",
-        "test": "cross-env NODE_ENV=test jest --watchAll --coverage",
-        "test:prod": "cross-env NODE_ENV=test jest --coverage --passWithNoTests",
+        "test": "cross-env NODE_ENV=test jest --watchAll --coverage --runInBand",
+        "test:prod": "cross-env NODE_ENV=test jest --coverage --passWithNoTests --runInBand",
         "dev": "run-p build:dev start:dev"
     },
     "keywords": [],

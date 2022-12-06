@@ -56,7 +56,6 @@ export class PlayerController {
     }
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
-            console.log(req.params.id, 'params iddd');
             await this.repository.delete(req.params.id);
 
             res.json({ id: req.body.id });

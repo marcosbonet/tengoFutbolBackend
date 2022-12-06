@@ -4,7 +4,7 @@ import { MatchRepo } from './repo.Match.js';
 import { PlayerRepo } from './repo.Player.js';
 
 describe('Given the Player respository', () => {
-    const mockData = [{ playerName: 'alvaro' }, { playerName: 'marcos' }];
+    const mockData = [{ playerName: 'Robiño' }, { playerName: 'marcos' }];
 
     const newPlayerMock = {
         playerName: 'Juan',
@@ -16,7 +16,7 @@ describe('Given the Player respository', () => {
     const newPlayerMockArray = [
         {
             id: '6388a756ea85b251c768e200',
-            playerName: 'alvaro',
+            playerName: 'Robiño',
             email: 'jajaja',
             level: 1,
             password: '1234',
@@ -82,8 +82,8 @@ describe('Given the Player respository', () => {
 
     describe('When we instanciate the query function , with a key', () => {
         test('it should return a player whit this key', async () => {
-            await repository.query('playerName', 'alvaro');
-            expect(newPlayerMockArray[0].playerName).toBe('alvaro');
+            await repository.query('playerName', 'Robiño');
+            expect(newPlayerMockArray[0].playerName).toBe('Robiño');
         });
     });
     describe('when we instanicate the delete function, with a id', () => {

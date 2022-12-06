@@ -10,7 +10,7 @@ describe('Given an "app" with "/matches" route', () => {
     const setPlayer = async () => {
         const mockPlayer = [
             {
-                playerName: 'RobertoCarlo',
+                playerName: 'Robiño',
                 password: '76543',
             },
             {
