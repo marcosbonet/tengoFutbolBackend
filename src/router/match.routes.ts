@@ -11,7 +11,7 @@ const controller = new MatchController(
 );
 
 matchesRouter.get('/', controller.get.bind(controller));
-matchesRouter.search('/place/:key/:value', controller.query.bind(controller));
+matchesRouter.search('/search/:key/:value', controller.query.bind(controller));
 matchesRouter.post('/', autori, controller.create.bind(controller));
 matchesRouter.patch(
     '/update/:id',

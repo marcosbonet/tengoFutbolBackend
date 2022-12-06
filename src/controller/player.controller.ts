@@ -1,8 +1,6 @@
 import createDebug from 'debug';
 import { NextFunction, Response, Request } from 'express';
 import { Error } from 'mongoose';
-import { userInfo } from 'os';
-
 import { HTTPError } from '../inerfaces/error.js';
 import { MatchRepo } from '../respository/repo.Match.js';
 import { PlayerRepo } from '../respository/repo.Player.js';

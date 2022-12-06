@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import mongoose, { Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { ProtoPlayer } from '../entities/players.js';
 import { CustomError, HTTPError } from '../inerfaces/error.js';
 import { ExtraRequest } from '../middlewares/interceptor.js';
