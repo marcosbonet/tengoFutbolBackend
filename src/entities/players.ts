@@ -37,7 +37,7 @@ playerSchema.set('toJSON', {
     transform: (_document, returnedObject) => {
         returnedObject.id = returnedObject._id;
         delete returnedObject.__v;
-        delete returnedObject.__id;
+        delete returnedObject._id;
         delete returnedObject.password;
     },
 });

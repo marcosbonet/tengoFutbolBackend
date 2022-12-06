@@ -11,20 +11,13 @@ const controller = new MatchController(
 );
 
 matchesRouter.get('/', controller.get.bind(controller));
-matchesRouter.search(
-    '/place/:key/:value',
-    controller.queryPlace.bind(controller)
-);
-matchesRouter.search(
-    '/date/:key/:value',
-    controller.queryDate.bind(controller)
-);
+matchesRouter.search('/place/:key/:value', controller.query.bind(controller));
 matchesRouter.post('/', autori, controller.create.bind(controller));
 matchesRouter.patch(
     '/update/:id',
     autori,
 
-    controller.update.bind(controller)
+    controller.updateAdd.bind(controller)
 );
 matchesRouter.patch(
     '/delete/:id',

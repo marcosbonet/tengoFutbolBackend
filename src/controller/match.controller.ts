@@ -16,100 +16,97 @@ export class MatchController {
             const match = await this.matchRepo.get();
             res.json({ match });
         } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
+            next(this.#createHttpError(error as Error));
         }
     }
-    async queryPlace(req: Request, res: Response, next: NextFunction) {
+    async query(req: Request, res: Response, next: NextFunction) {
         try {
             debug('query');
 
-            const match = await this.matchRepo.query({ place: req.body.place });
-            res.status(201).json({ match });
-        } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
-        }
-    }
-    async queryDate(req: Request, res: Response, next: NextFunction) {
-        try {
-            debug('query');
+            const match = await this.matchRepo.query({ place: req.body.value });
 
-            const match = await this.matchRepo.query({ date: req.body.date });
-            res.status(201).json({ match });
+            res.status(201);
+            res.json({ match });
         } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
-            );
-            next(httpError);
+            next(this.#createHttpError(error as Error));
         }
     }
 
     async create(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
             debug('post');
+
             if (!req.payload) {
                 throw new Error(' Invalid Payload');
             }
 
             const playerA = await this.playerRepo.getOne(req.payload.id);
 
-            req.body.players = playerA.id;
-
             const matchA = await this.matchRepo.create(req.body);
 
-            playerA.matches.push(matchA.id);
+            matchA.players.push(playerA.id);
 
-            this.playerRepo.update(playerA.id.toString(), {
-                matches: playerA.matches,
+            this.matchRepo.update(matchA.id.toString(), {
+                players: matchA.players,
             });
+
             res.status(201);
-            res.json(matchA);
+            res.json({ playerA });
         } catch (error) {
-            const httpError = new HTTPError(
-                503,
-                'Service unavailable',
-                (error as Error).message
+            next(this.#createHttpError(error as Error));
+        }
+    }
+    async updateAdd(req: ExtraRequest, res: Response, next: NextFunction) {
+        try {
+            if (!req.payload) {
+                throw new Error('the playeris already in this match');
+            }
+            const match = await this.matchRepo.getOne(req.params.id);
+
+            const player = await this.playerRepo.getOne(req.payload.id);
+            if (match.players.includes(player.id)) {
+                throw new Error('this player is already in this match');
+            }
+
+            match.players.push(player.id);
+            const updateMatch = await this.matchRepo.update(
+                match.id.toString(),
+                { players: match.players }
             );
+
+            res.status(200);
+            res.json(updateMatch);
+        } catch (error) {
+            const httpError = new HTTPError(404, 'Not Found', 'Not found id');
             next(httpError);
         }
     }
-    async update(req: Request, res: Response, next: NextFunction) {
+    async updatedelete(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
-            const match = await this.matchRepo.update(req.params.id, req.body);
-            res.json({ match });
+            if (!req.payload) throw new Error('Wrong payload');
+            const match = await this.matchRepo.getOne(req.params.id);
+            debug(match);
+            const player = await this.playerRepo.getOne(req.payload.id);
+            debug(player);
+            const filterDelete = match.players.filter(
+                (ply) => ply.toString() !== player.id.toString()
+            );
+
+            const updateDelete = await this.matchRepo.update(
+                match.id.toString(),
+                {
+                    players: filterDelete,
+                }
+            );
+
+            res.json(updateDelete);
         } catch (error) {
-            next(this.#createHttpError(error as Error));
-        }
-    }
-    async updatedelete(req: Request, res: Response, next: NextFunction) {
-        try {
-            const match = await this.matchRepo.delete(req.params.id);
-            res.json({ match });
-        } catch (error) {
-            next(this.#createHttpError(error as Error));
+            const httpError = new HTTPError(404, 'Not Found', 'Not found id');
+            next(httpError);
         }
     }
 
     #createHttpError(error: Error) {
-        if (error.message === 'Not found id') {
-            const httpError = new HTTPError(
-                404,
-                'Not Found',
-                (error as Error).message
-            );
-            return httpError;
-        }
         const httpError = new HTTPError(
             503,
             'Service Unavailable',

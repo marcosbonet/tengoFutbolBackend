@@ -32,7 +32,7 @@ matchSchema.set('toJSON', {
     transform: (_document, returnedObject) => {
         returnedObject.id = returnedObject._id;
         delete returnedObject.__v;
-        delete returnedObject.__id;
+        delete returnedObject._id;
     },
 });
 export const Match = model<MatchTypes>('matches', matchSchema, 'matches');

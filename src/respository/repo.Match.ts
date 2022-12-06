@@ -27,11 +27,8 @@ export class MatchRepo {
         id: id,
         updateMatch: Partial<MatchTypes>
     ): Promise<MatchTypes> {
-        const result = await Match.findByIdAndUpdate(id, updateMatch, {
+        const result = await this.#Match.findByIdAndUpdate(id, updateMatch, {
             new: true,
-        }).populate('players', {
-            email: 0,
-            password: 0,
         });
 
         return result as MatchTypes;
