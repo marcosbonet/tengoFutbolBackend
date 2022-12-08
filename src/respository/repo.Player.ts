@@ -28,7 +28,9 @@ export class PlayerRepo {
         return result as PlayerTypes;
     }
     async query(key: string, value: string): Promise<PlayerTypes> {
-        const result = await this.#Model.findOne({ [key]: value });
+        const result = await this.#Model
+            .findOne({ [key]: value })
+            .populate('matches');
         return result as unknown as PlayerTypes;
     }
     async update(

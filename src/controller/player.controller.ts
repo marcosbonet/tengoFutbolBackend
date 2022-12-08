@@ -49,7 +49,7 @@ export class PlayerController {
             });
             res.status(202);
 
-            res.json({ token });
+            res.json({ token, player });
         } catch (error) {
             next(error);
         }

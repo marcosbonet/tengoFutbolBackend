@@ -13,7 +13,10 @@ export class MatchRepo {
     }
     #Match = Match;
     async get(): Promise<Array<MatchTypes>> {
-        const matches = this.#Match.find();
+        const matches = this.#Match
+            .find()
+            .populate('players')
+            .populate({ path: 'players', populate: 'matches' });
         return matches;
     }
     async getOne(id: id): Promise<MatchTypes> {
