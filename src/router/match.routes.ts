@@ -19,6 +19,7 @@ matchesRouter.patch(
 
     controller.updateAdd.bind(controller)
 );
+
 matchesRouter.patch(
     '/delete/:id',
     autori,

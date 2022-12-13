@@ -13,11 +13,7 @@ export class PlayerRepo {
     }
     #Model = Player;
     async get(): Promise<Array<PlayerTypes>> {
-        return Player.find().populate('matches', {
-            id: 0,
-            image: 0,
-            player: 0,
-        });
+        return Player.find();
     }
     async getOne(id: id): Promise<PlayerTypes> {
         const result = await Player.findById(id).populate('matches', {
@@ -39,10 +35,6 @@ export class PlayerRepo {
     ): Promise<PlayerTypes> {
         const result = await Player.findByIdAndUpdate(id, updateMatch, {
             new: true,
-        }).populate('matches', {
-            id: 0,
-            image: 0,
-            player: 0,
         });
 
         return result as PlayerTypes;

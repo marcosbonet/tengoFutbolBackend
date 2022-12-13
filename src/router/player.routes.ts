@@ -13,3 +13,15 @@ const controller = new PlayerController(
 playerRouter.post('/register', controller.register.bind(controller));
 playerRouter.post('/login', controller.login.bind(controller));
 playerRouter.delete('/delete/:id', autori, controller.delete.bind(controller));
+
+playerRouter.patch(
+    '/update/:id',
+    autori,
+    controller.updateAdd.bind(controller)
+);
+
+playerRouter.patch(
+    '/delete/:id',
+    autori,
+    controller.updateDelete.bind(controller)
+);
