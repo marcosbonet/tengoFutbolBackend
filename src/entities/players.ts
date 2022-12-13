@@ -27,7 +27,7 @@ export const playerSchema = new Schema<PlayerTypes>({
     password: String,
     matches: [
         {
-            type: Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'matches',
         },
     ],

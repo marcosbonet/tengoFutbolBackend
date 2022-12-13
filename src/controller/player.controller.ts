@@ -85,7 +85,6 @@ export class PlayerController {
             if (!req.payload) {
                 throw new Error('the playeris already in this match');
             }
-            // const match = await this.matchRepo.getOne(req.params.id);
 
             const player = await this.repository.getOne(req.payload.id);
 
@@ -114,6 +113,22 @@ export class PlayerController {
             await this.repository.delete(req.params.id);
 
             res.json({ id: req.body.id });
+        } catch (error) {
+            (error as Error).message === 'Not found id';
+            const httpError = new HTTPError(
+                404,
+                'Not Found',
+                (error as Error).message
+            );
+            next(httpError);
+        }
+    }
+    async getOne(req: ExtraRequest, res: Response, next: NextFunction) {
+        try {
+            const player = await this.repository.getOne(req.payload.id);
+            console.log(player, 'jugador');
+            res.status(201);
+            res.json({ player });
         } catch (error) {
             (error as Error).message === 'Not found id';
             const httpError = new HTTPError(

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { Player, PlayerTypes } from '../entities/players.js';
 import { id } from '../inerfaces/repo.interfaces.js';
 import { passwdEncrypt } from '../services/auth/auth.js';
@@ -16,11 +16,11 @@ export class PlayerRepo {
         return Player.find();
     }
     async getOne(id: id): Promise<PlayerTypes> {
-        const result = await Player.findById(id).populate('matches', {
-            id: 0,
-            image: 0,
-            player: 0,
-        });
+        const result = await this.#Model.findById(id).populate('matches');
+        // .populate('matches', {
+        //     id: 0,
+        //     image: 0,
+        // }
         return result as PlayerTypes;
     }
     async query(key: string, value: string): Promise<PlayerTypes> {

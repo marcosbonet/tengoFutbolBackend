@@ -25,3 +25,5 @@ playerRouter.patch(
     autori,
     controller.updateDelete.bind(controller)
 );
+
+playerRouter.get('/getOne', autori, controller.getOne.bind(controller));
