@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 import { NextFunction, Response, Request } from 'express';
-import { Error, Types } from 'mongoose';
+import { Error } from 'mongoose';
 import { HTTPError } from '../inerfaces/error.js';
 import { ExtraRequest } from '../middlewares/interceptor.js';
 import { MatchRepo } from '../respository/repo.Match.js';
@@ -125,8 +125,8 @@ export class PlayerController {
     }
     async getOne(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
-            const player = await this.repository.getOne(req.payload.id);
-            console.log(player, 'jugador');
+            const player = await this.repository.getOne(req.payload?.id);
+
             res.status(201);
             res.json({ player });
         } catch (error) {
