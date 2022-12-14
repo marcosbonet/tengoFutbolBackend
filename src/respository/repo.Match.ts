@@ -20,10 +20,7 @@ export class MatchRepo {
         return matches;
     }
     async getOne(id: id): Promise<MatchTypes> {
-        const result = await Match.findById(id).populate('players', {
-            id: 0,
-            image: 0,
-        });
+        const result = await Match.findById(id).populate('players', {});
         return result as MatchTypes;
     }
     async update(
