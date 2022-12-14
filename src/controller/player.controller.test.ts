@@ -143,6 +143,25 @@ describe('Given playerController', () => {
             );
             expect(res.json).toHaveBeenCalled();
         });
+        test('Then UPDATE should return an error', async () => {
+            await PlayerController1.updateAdd(
+                req as Request,
+                res as Response,
+                next
+            );
+            expect(error).toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(HTTPError);
+        });
+
+        test('Then DELETE should return an error', async () => {
+            const error = new Error('Not found id');
+            await PlayerController1.updateDelete(
+                req as Request,
+                res as Response,
+                next
+            );
+            expect(error).toBeInstanceOf(Error);
+        });
     });
     describe('When PlayerController is not valid', () => {
         let error: CustomError;

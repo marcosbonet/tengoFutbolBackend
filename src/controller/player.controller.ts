@@ -86,19 +86,22 @@ export class PlayerController {
                 throw new Error('the playeris already in this match');
             }
 
-            const player = await this.repository.getOne(req.payload.id);
+            const player: any = await this.repository.getOne(req.payload.id);
 
             if (player.matches.includes(req.params.id)) {
                 throw new Error('this player is already in this match');
             }
+            console.log(req.params.id);
+            console.log(player.matches, 'soy el orginal');
 
-            player.matches.filter((match) => {
-                return match !== req.params.id;
+            const updateMatches = player.matches.filter((match: any) => {
+                return match._id.toString() !== req.params.id;
             });
 
+            console.log(updateMatches, 'soy el filtrado');
             const updateDeletePlayer = await this.repository.update(
                 player.id.toString(),
-                { matches: player.matches }
+                { matches: updateMatches }
             );
 
             res.status(200);

@@ -23,6 +23,10 @@ export class PlayerRepo {
         // }
         return result as PlayerTypes;
     }
+    async getWithoutPopulate(id: id): Promise<PlayerTypes> {
+        const result = await this.#Model.findById(id);
+        return result as PlayerTypes;
+    }
     async query(key: string, value: string): Promise<PlayerTypes> {
         const result = await this.#Model
             .findOne({ [key]: value })
